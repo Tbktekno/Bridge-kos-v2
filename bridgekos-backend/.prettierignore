@@ -1,0 +1,10 @@
+node_modules
+dist
+generated
+src/generated
+coverage
+storage
+prisma/migrations
+prisma/*.db
+*.db
+.env
