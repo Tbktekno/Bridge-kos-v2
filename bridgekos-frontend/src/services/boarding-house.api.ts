@@ -1,5 +1,4 @@
 import { api } from '@/services/api';
-import type { PaginationMeta } from '@/types/auth';
 import type {
   BoardingHouseQuery,
   BoardingHouseListResponse,
@@ -8,7 +7,7 @@ import type {
   CreateBoardingHouseInput,
   UpdateBoardingHouseInput,
 } from '@/types/boarding-house';
-import type { RoomSummary, RoomInput } from '@/types/room';
+import type { RoomSummary, RoomInput } from '@/types/rooming';
 
 interface ApiEnvelope<T> {
   success: boolean;

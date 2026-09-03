@@ -9,6 +9,7 @@ import {
   boardingHouseInclude,
   createBoardingHouse,
   findBoardingHouseById,
+  findBoardingHouseBySlug,
   listBoardingHouses,
   removeBoardingImage,
   slugExists,
@@ -186,8 +187,9 @@ export async function listByOwner(userId: string, query: ListBoardingQuery) {
   return { items, total, meta: buildPaginationMeta(pagination, total) };
 }
 
-export async function getPublicById(id: string) {
-  const house = await findBoardingHouseById(id);
+export async function getPublicById(value: string) {
+  const house =
+    (await findBoardingHouseById(value)) ?? (await findBoardingHouseBySlug(value));
   if (!house || house.deletedAt || house.status !== 'PUBLISHED') {
     throw new NotFoundError('Boarding house not found');
   }
@@ -197,8 +199,9 @@ export async function getPublicById(id: string) {
 /**
  * Returns a wa.me deep-link to contact the owner directly on WhatsApp.
  */
-export async function getWhatsAppContact(id: string) {
-  const house = await findBoardingHouseById(id);
+export async function getWhatsAppContact(value: string) {
+  const house =
+    (await findBoardingHouseById(value)) ?? (await findBoardingHouseBySlug(value));
   if (!house || house.deletedAt || house.status !== 'PUBLISHED') {
     throw new NotFoundError('Boarding house not found');
   }

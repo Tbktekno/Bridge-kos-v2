@@ -7,6 +7,7 @@ import {
 import { prisma } from '../../../utils/prisma.js';
 import { findTenantByUserId } from '../../tenants/repository/tenant.repository.js';
 import { findOwnerByUserId } from '../../owners/repository/owner.repository.js';
+import { findBoardingHouseBySlug } from '../../boarding_houses/repository/boarding-house.repository.js';
 import {
   countUserReview,
   createReview,
@@ -45,9 +46,21 @@ export async function create(userId: string, input: CreateReviewInput) {
   return review;
 }
 
+async function resolveBoardingHouseId(value: string): Promise<string> {
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value);
+  if (isUuid) return value;
+
+  const house = await findBoardingHouseBySlug(value);
+  if (!house || house.deletedAt || house.status !== 'PUBLISHED') {
+    throw new NotFoundError('Boarding house not found');
+  }
+  return house.id;
+}
+
 export async function listByHouse(boardingHouseId: string, query: Record<string, unknown>) {
+  const houseId = await resolveBoardingHouseId(boardingHouseId);
   const pagination = parsePagination(query);
-  const { items, total } = await listReviewsByHouse(boardingHouseId, {
+  const { items, total } = await listReviewsByHouse(houseId, {
     skip: pagination.skip,
     take: pagination.take,
   });

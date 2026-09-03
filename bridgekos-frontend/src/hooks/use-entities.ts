@@ -108,9 +108,11 @@ export function useUnreadCount() {
 }
 
 export function useFavorites() {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   return useQuery({
     queryKey: [QUERY_KEYS.favorites.list],
     queryFn: () => favoriteApi.list(),
+    enabled: isAuthenticated,
   });
 }
 

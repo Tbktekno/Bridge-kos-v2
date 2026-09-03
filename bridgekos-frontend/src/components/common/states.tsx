@@ -56,7 +56,7 @@ export function ErrorState({
   description,
   onRetry,
   className,
-}: Omit<StateProps, 'action'> & { onRetry?: () => void }) {
+}: Omit<StateProps, 'action' | 'title'> & { onRetry?: () => void }) {
   return (
     <div
       className={cn(
